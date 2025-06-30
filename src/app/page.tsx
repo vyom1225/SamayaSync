@@ -1,5 +1,5 @@
 import Navbar from "@/components/Navbar";
-import { auth } from "@/utils/auth";
+import { auth } from "@/lib/auth";
 import Image from "next/image";
 import { redirect } from "next/navigation";
 
@@ -12,6 +12,7 @@ export default async function Home() {
     <div >
         <Navbar/>
         <div>Hello This is delhi my yaar</div>
+        <div>wait what are you doing</div>
     </div>
     
   );

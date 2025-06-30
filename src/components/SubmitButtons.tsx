@@ -5,6 +5,29 @@ import { Button } from "./ui/button";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
 
+interface submitBtnProps {
+    variant? : "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined ,
+    text : string,
+    className? : string
+}
+export function SubmitButton({variant , text , className} : submitBtnProps){
+    const {pending} = useFormStatus();
+
+    return(
+    <> {
+        pending ? (
+            <Button disabled variant="outline" className={`${className}`}>
+                <Loader2 className="animate-spin"/>Please Wait</Button>
+        ) : (
+            <Button type = "submit" variant = {variant} className={`${className}`}>
+                {text}
+            </Button>
+        )
+    }
+    </>
+)}
+
+
 export function GoogleAuthButton(){
     const {pending} = useFormStatus();
     return(
