@@ -44,3 +44,11 @@ export const settingSchema = z.object({
     fullName : z.string().min(3).max(150),
     profileImage : z.string()
 })
+
+export const newEventTypeSchema = z.object({
+    title : z.string().min(3).max(150),
+    duration : z.enum(["15", "30", "45", "60"]),
+    videoCallSoftware : z.enum(["Zoom", "Google Meet", "Microsoft Teams"]),
+    description : z.string().min(3).max(300),
+    url : z.string().min(3).max(150),
+})
