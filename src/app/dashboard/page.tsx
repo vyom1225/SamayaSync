@@ -31,7 +31,8 @@ async function getData(userId : string){
                     active : true,
                     url : true
                 }
-            }
+            },
+            username : true
         }
     })
 
@@ -91,8 +92,10 @@ async function DashboardPage() {
                                         <DropdownMenuLabel>Event</DropdownMenuLabel>
                                         <DropdownMenuSeparator/>
                                         <DropdownMenuItem>
-                                            <SquareArrowOutUpRight/>
-                                            Preview
+                                            <Link href = {`/${data.username}/${item.url}`} className="flex gap-2 items-center">
+                                                <SquareArrowOutUpRight/>
+                                                Preview
+                                            </Link>      
                                         </DropdownMenuItem>
                                         <DropdownMenuItem>
                                             <Link2/>
