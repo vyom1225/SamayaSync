@@ -17,11 +17,12 @@ import { updateAvailabilityAction } from "@/app/actions";
 
 
 async function getData(id : string){
-    const data = prisma.availability.findMany({
+    const data = await prisma.availability.findMany({
         where : {
             userId : id
         },
     })
+
 
     if(!data){
         return notFound()

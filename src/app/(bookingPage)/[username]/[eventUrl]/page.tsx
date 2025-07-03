@@ -114,7 +114,7 @@ async function bookingPage({params , searchParams} : {
                 </div>
                 <Separator orientation="vertical" className="w-[1px] h-full"/>
                 <div className="p-4">
-                    <TimeTable/>
+                    <TimeTable username = {username} selectedDate={selectedDate} duration = {data.duration}/>
                 </div>
             </CardContent>
         </Card>
