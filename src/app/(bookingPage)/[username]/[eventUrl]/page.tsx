@@ -49,22 +49,16 @@ async function getData(eventUrl : string , username : string){
 }
 
 
-async function bookingPage({params , searchParams} : {
-    params : {
-        username : string,
-        eventUrl : string
-    },
-    searchParams :{
-        date? : string
-    }
+async function bookingPage({
+  params,
+  searchParams,
+}: {
+  params: Promise<{ username: string; eventUrl: string }>;
+  searchParams: Promise<{ date?: string }>;
 }) {
 
-  const {eventUrl , username} = await params
-
-  const data = await getData(eventUrl , username);
-
+  const { eventUrl, username } = await params;
   const awaitedParams = await searchParams;
-  
   const selectedDate = awaitedParams.date
         ? new Date(awaitedParams.date)
         : new Date()
@@ -74,6 +68,8 @@ async function bookingPage({params , searchParams} : {
     day : "numeric",
     month : "long"
   }).format(selectedDate )
+
+  const data = await getData(eventUrl , username);
 
   return (
     <div className="flex justify-center items-center min-h-screen w-screen bg-primary-foreground">

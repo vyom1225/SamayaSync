@@ -19,7 +19,7 @@ import { parseWithZod } from "@conform-to/zod";
 import { onBoardingSchema } from "@/lib/zodSchema";
 import { SubmitButton } from "@/components/SubmitButtons";
 
-function onBoardingRoute() {
+export default function OnBoardingRoute() {
   const session = authenticateUser();
   const [lastResult , action] = useActionState(onBoardingAction , undefined)
 
@@ -75,4 +75,3 @@ function onBoardingRoute() {
     
   )
 }
-export default onBoardingRoute

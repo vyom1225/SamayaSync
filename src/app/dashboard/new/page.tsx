@@ -14,7 +14,7 @@ import { parseWithZod } from "@conform-to/zod"
 import Link from "next/link"
 import { useActionState, useState } from "react"
 
-function newPageRoute() {
+function NewPageRoute() {
     const [selectedSoftware, setSelectedSoftware] = useState("Google Meet");
 
     const [lastResult, formAction] = useActionState(newEventTypeAction, undefined);
@@ -111,4 +111,4 @@ function newPageRoute() {
     </div>
   )
 }
-export default newPageRoute
+export default NewPageRoute

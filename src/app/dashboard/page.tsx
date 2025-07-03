@@ -72,8 +72,8 @@ async function DashboardPage() {
                     </div>
                 </div>
                 <div className="flex w-full justify-start gap-4 flex-wrap">
-                     {data.eventType.map((item) => (
-                        <div className = "border-1 border-gray-200 rounded-sm relative min-w-[300px] ">
+                     {data.eventType.map((item , index) => (
+                        <div className = "border-1 border-gray-200 rounded-sm relative min-w-[300px] " key = {index}>
                             <div className="flex items-center gap-4 p-4">
                                 <UsersRound />
                                 <div className="flex flex-col">
