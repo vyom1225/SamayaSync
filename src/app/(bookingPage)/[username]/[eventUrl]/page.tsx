@@ -81,7 +81,7 @@ async function bookingPage({
   const showForm = !!awaitedParams.date && !!awaitedParams.time
 
   return (
-    <div className="flex justify-center items-center min-h-screen w-screen bg-primary-foreground p-8">
+    <div className="flex justify-center items-center min-h-screen w-screen bg-primary-foreground dark:bg-black p-8">
         {showForm ? (
         <Card className = "max-w-[720px] p-0">
             <CardContent className="md:grid md:grid-cols-[3fr_auto_4fr] md:grid-flow-col p-0 min-h-[420px] w-full">
@@ -168,8 +168,8 @@ async function bookingPage({
             </CardContent>
         </Card>
         ) : (
-            <Card className = "max-w-[1000px] p-0 mx-auto">
-            <CardContent className="p-0 h-full md:grid md:grid-cols-[1fr_auto_1fr_auto_1fr] md:grid-flow-col">
+            <Card className = "max-w-[1000px] p-0 mx-auto rounded-sm">
+            <CardContent className="p-0 h-full md:grid md:grid-cols-[2fr_auto_4fr_auto_2fr] md:grid-flow-col">
                 <div className="p-6 flex flex-col gap-4">
                     <div className="space-y-2">
                         <img src = {data.user?.image as string} 
