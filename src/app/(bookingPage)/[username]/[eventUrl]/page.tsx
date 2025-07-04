@@ -1,5 +1,4 @@
 import { creatMeetingAction } from "@/app/actions"
-import Calendar from "@/components/bookingForm/Calendar"
 import RenderCalendar from "@/components/bookingForm/RenderCalendar"
 import { TimeTable } from "@/components/bookingForm/TimeTable"
 import { CancelButton } from "@/components/CancelButton"
@@ -11,9 +10,12 @@ import { Label } from "@/components/ui/label"
 import { Separator } from "@/components/ui/separator"
 import { Textarea } from "@/components/ui/textarea"
 import { prisma } from "@/lib/db"
-import { time } from "console"
+import { nylas } from "@/lib/nylas"
+import { Prisma } from "@prisma/client"
+import { addMinutes, format, fromUnixTime, isAfter, isBefore, parse } from "date-fns"
 import { CalendarX2, Clock, Video } from "lucide-react"
-import { notFound } from "next/navigation"
+import { notFound, redirect } from "next/navigation"
+import { GetFreeBusyResponse, NylasResponse } from "nylas"
 
 async function getData(eventUrl : string , username : string){
 
@@ -47,11 +49,110 @@ async function getData(eventUrl : string , username : string){
         }
     })
 
-    if(!data){
+    if(!data){ 
         return notFound();
     }
 
     return data;
+
+}
+
+async function getAvailabilityData(username : string , selectedDate : Date){
+
+    const dayOfWeek = format(selectedDate , "EEEE");
+
+    const startOfDay = new Date(selectedDate)
+    startOfDay.setHours(0 , 0 , 0 , 0);
+
+    const endOfDay = new Date(selectedDate);
+    endOfDay.setHours(23 , 59 , 59 , 999);
+
+    const availableSlotsdata = await prisma.availability.findFirst({
+        where : {
+            day : dayOfWeek as Prisma.EnumDayFilter ,
+            User : {
+                username : username
+            }
+        },
+        select : {
+            fromTime : true,
+            tillTime : true,
+            id : true , 
+            User : {
+                select : {
+                    grantEmail : true,
+                    grantId : true
+                }
+            }
+        }
+    })
+
+    const nylasCalendarData = await nylas.calendars.getFreeBusy({
+        identifier : availableSlotsdata?.User?.grantId as string, 
+        requestBody : {
+            startTime : Math.floor(startOfDay.getTime() / 1000),
+            endTime :  Math.floor(endOfDay.getTime()/1000 ),
+            emails : [availableSlotsdata?.User?.grantEmail as string],
+        }
+    })
+    return {
+        availableSlotsdata , 
+        nylasCalendarData
+    }
+}
+
+function calculateAvailableTimeSlots(date : string,
+    dbAvailability : {
+        fromTime : string | undefined,
+        tillTime : string | undefined
+    },
+    nylasData : NylasResponse<GetFreeBusyResponse[]>,
+    duration : number
+){
+    const now = new Date();
+
+    const availableFrom = parse(
+        `${date} ${dbAvailability.fromTime}`,
+        "yyyy-MM-dd HH:mm",
+        new Date()
+    );
+
+    const availableTill = parse(
+        `${date} ${dbAvailability.tillTime}`,
+        "yyyy-MM-dd HH:mm" ,
+        new Date()
+    )
+
+    //@ts-ignore
+    const busySlots = nylasData.data[0].timeSlots.map((slot) => ({
+        start : fromUnixTime(slot.startTime),
+        end : fromUnixTime(slot.endTime)
+    }))
+
+    const allSlots = [];
+    let currentSlot = availableFrom;
+
+    while(isBefore(currentSlot , availableTill)){
+        allSlots.push(currentSlot);
+        currentSlot = addMinutes(currentSlot , duration);
+    }
+
+
+    const freeSlots = allSlots.filter((slot) => {
+
+        const slotEnd = addMinutes(slot , duration);
+
+        return (
+            isAfter(slot , now) && 
+                !busySlots.some( (busy : {start : any , end : any}) => 
+                    (!isBefore(slot , busy.start) && isBefore(slot , busy.end)) || 
+                    (isAfter(slotEnd , busy.start) && !isAfter(slotEnd , busy.end)) ||
+                    (isBefore(slot , busy.start) && isAfter(slotEnd , busy.end))
+                )
+        )
+    })
+
+    return freeSlots.map((slot) => format(slot , "HH:mm"))
 
 }
 
@@ -80,7 +181,37 @@ async function bookingPage({
 
   const showForm = !!awaitedParams.date && !!awaitedParams.time
 
+  const todayDate = new Date();
+  todayDate.setHours(0,0,0,0)
+
+  const isDateValid = !isBefore(selectedDate,todayDate);
+  
+  const {availableSlotsdata , nylasCalendarData } = await getAvailabilityData(username , selectedDate);
+
+    const formattedDateForavailAbility = format(selectedDate , "yyyy-MM-dd");
+
+    const dbAvailability = {
+        fromTime : availableSlotsdata?.fromTime,
+        tillTime : availableSlotsdata?.tillTime,
+    }
+
+    const availableSlots = calculateAvailableTimeSlots(
+        formattedDateForavailAbility, 
+        dbAvailability,
+        nylasCalendarData,
+        data.duration
+    )
+    
+    const isTimeValid = (!awaitedParams.time) || availableSlots.some((slot) => (
+        slot === awaitedParams.time
+    ))
+
+  const isDateTimeValid = isDateValid && isTimeValid;
+
   return (
+       !isDateTimeValid 
+        ? notFound() 
+        : (
     <div className="flex justify-center items-center min-h-screen w-screen bg-primary-foreground dark:bg-black p-8">
         {showForm ? (
         <Card className = "max-w-[720px] p-0">
@@ -205,12 +336,13 @@ async function bookingPage({
                 </div>
                 <Separator orientation="vertical" className="min-w-[1px] h-full"/>
                 <div className="p-6">
-                    <TimeTable username = {username} selectedDate={selectedDate} duration = {data.duration}/>
+                    <TimeTable  availableSlots = {availableSlots} selectedDate={selectedDate}/>
                 </div>
             </CardContent>
         </Card>             
         )}
     </div>
+    )
   )
 }
 export default bookingPage

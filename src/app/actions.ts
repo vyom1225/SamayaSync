@@ -211,7 +211,7 @@ export async function creatMeetingAction(formData : FormData){
     const endDateTime = new Date(startDateTime.getTime() + meetingLength * 60000)
     
 
-    const response = await nylas.events.create({
+    await nylas.events.create({
         identifier : data.grantId as string,
         requestBody : {
             title : eventData?.title,
@@ -311,4 +311,37 @@ export async function DeleteEventTypeAction(formData : FormData){
     })
 
     return redirect("/dashboard")
+}
+
+export async function UpdateEventSwitchAction( prevState : any , {eventTypeId , isChecked} : {
+    eventTypeId : string,
+    isChecked : boolean
+}){
+
+    try{
+        const session = await authenticateUser();
+
+        const data = await prisma.eventType.update({
+            where : {
+                id : eventTypeId,
+                userId : session?.user?.id
+            },
+            data : {
+                active : isChecked
+            }
+        })
+
+        revalidatePath("/dashboard")
+
+        return {
+            status : "success",
+            message : "Event Type Status Updated"
+        }
+    }catch(error){
+        return {
+            status : "error",
+            message : "Something went wrong"
+        }
+    }
+   
 }
