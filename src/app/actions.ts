@@ -242,3 +242,73 @@ export async function creatMeetingAction(formData : FormData){
 
     return redirect("/success")
 }
+
+
+export async function cancelMeetingAction(formData : FormData){
+    const session = await authenticateUser();
+
+    const userData = await prisma.user.findUnique({
+        where : {
+            id : session.user?.id
+        },
+        select : {
+            grantEmail : true,
+            grantId : true
+        }
+    })
+
+    if(!userData){
+        throw new Error("User not found")
+    }
+
+    await nylas.events.destroy({
+        eventId : formData.get("eventId") as string,
+        identifier : userData.grantId as string,
+        queryParams : {
+            calendarId : userData.grantEmail as string
+        }
+    })
+
+    revalidatePath("/dashboard/meetings");
+}
+
+export async function EditEventTypeAction(prev : any , formData : FormData){
+    const session = await authenticateUser();
+
+    const submission = parseWithZod(formData , {
+        schema : newEventTypeSchema
+    })
+
+    if(submission.status !== 'success'){
+        return submission.reply()
+    }
+
+    const data = await prisma.eventType.update({
+        where : {
+            id : formData.get("id") as string,
+            userId : session?.user?.id
+        },
+        data : {
+            title : submission.value.title,
+            duration : parseInt(submission.value.duration),
+            videoCallSoftware : submission.value.videoCallSoftware,
+            description : submission.value.description,
+            url : submission.value.url,
+        }
+    })
+
+    return redirect("/dashboard");
+}
+
+export async function DeleteEventTypeAction(formData : FormData){
+    const session = await authenticateUser();
+
+    await prisma.eventType.delete({
+        where : {
+            id : formData.get('id') as string,
+            userId : session.user?.id
+        }
+    })
+
+    return redirect("/dashboard")
+}

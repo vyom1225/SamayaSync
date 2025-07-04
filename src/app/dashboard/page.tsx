@@ -16,6 +16,7 @@ import {
     DropdownMenuSeparator,
     DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
+import CopyLinkMenu from "@/components/CopyLinkMenu";
 
 async function getData(userId : string){
     const data = await prisma.user.findUnique({
@@ -83,7 +84,11 @@ async function DashboardPage() {
                             </div>
                             <div className="bg-primary-foreground p-4 flex justify-between items-center">
                                 <Switch/>
-                                <SubmitButton text="Edit Event"/>
+                                <Button asChild>
+                                    <Link href = {`/dashboard/event/${item.id}`}>
+                                        Edit Event
+                                    </Link>
+                                </Button>
                             </div>
                             <div className="absolute top-2 right-2 border-primary-foreground border-1 p-2 rounded-sm">
                                 <DropdownMenu>
@@ -97,17 +102,20 @@ async function DashboardPage() {
                                                 Preview
                                             </Link>      
                                         </DropdownMenuItem>
+                                        <CopyLinkMenu meetingUrl={`${process.env.NEXT_PUBLIC_URL}/
+                                            ${data.username}/${item.url}`}
+                                        />
                                         <DropdownMenuItem>
-                                            <Link2/>
-                                            Copy
+                                            <Link href = {`/dashboard/event/${item.id}`} className="flex items-center gap-2">
+                                                <Pen/>
+                                                Edit
+                                            </Link> 
                                         </DropdownMenuItem>
                                         <DropdownMenuItem>
-                                            <Pen/>
-                                            Edit
-                                        </DropdownMenuItem>
-                                        <DropdownMenuItem>
-                                            <Trash/>
-                                            Delete
+                                            <Link href = {`/dashboard/event/${item.id}/delete`} className="flex items-center gap-2">
+                                                <Trash/>
+                                                Delete
+                                            </Link>
                                         </DropdownMenuItem>
                                     </DropdownMenuContent>
                                 </DropdownMenu>

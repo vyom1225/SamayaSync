@@ -1,3 +1,5 @@
+// import Footer from "@/components/Footer";
+import Hero from "@/components/Hero";
 import Navbar from "@/components/Navbar";
 import { auth } from "@/lib/auth";
 import Image from "next/image";
@@ -9,11 +11,13 @@ export default async function Home() {
     return redirect("/dashboard")
   }
   return (
-    <div >
+    <>
+    <div className="min-h-screen flex flex-col relative" >
         <Navbar/>
-        <div>Hello This is delhi my yaar</div>
-        <div>wait what are you doing</div>
+        <Hero/>
+        
     </div>
-    
+    {/* <Footer/> */}
+    </>   
   );
 }

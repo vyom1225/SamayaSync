@@ -2,6 +2,7 @@
 import { Button } from "./ui/button"
 
 function ButtonGroup({selected, setSelected}: {selected: string, setSelected: (selected: string) => void}) {
+ 
   return (
     <div className="flex w-full">
         <Button className="rounded-r-none flex-1" 
