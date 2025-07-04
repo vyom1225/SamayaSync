@@ -92,8 +92,6 @@ function calculateAvailableTimeSlots(date : string,
         currentSlot = addMinutes(currentSlot , duration);
     }
 
-    console.log(availableFrom);
-    console.log(availableTill);
 
     const freeSlots = allSlots.filter((slot) => {
 
