@@ -55,8 +55,8 @@ export default async function Meetings(){
                     </CardHeader>
                     <CardContent>
                         {
-                            data.data.map((item) => (
-                                <form action = {cancelMeetingAction}>
+                            data.data.map((item , index) => (
+                                <form action = {cancelMeetingAction} key = {index}>
                                     <input type = "hidden"
                                            name = "eventId"
                                            value = {item.id}

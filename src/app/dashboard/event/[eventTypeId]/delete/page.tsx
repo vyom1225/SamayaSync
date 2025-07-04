@@ -4,9 +4,7 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import Link from "next/link"
 
 async function DeleteEventRoute({params} : {
-    params : {
-        eventTypeId : string
-    }
+    params :  Promise<{eventTypeId : string}>
 }) {
   
   const {eventTypeId} = await params

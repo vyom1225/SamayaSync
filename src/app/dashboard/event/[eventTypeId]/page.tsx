@@ -28,9 +28,7 @@ async function getData(eventTypeId : string){
 async function EditEventRoute({
     params,
 } : {
-    params : {
-        eventTypeId : string
-    }
+    params :  Promise<{eventTypeId : string}>
 }) {
     const {eventTypeId} = await params;
     const data = await getData(eventTypeId);
