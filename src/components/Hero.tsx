@@ -2,7 +2,7 @@ import AuthModal from "./AuthModal"
 
 function Hero() {
   return (
-    <div className="flex flex-1 h-full w-full p-6 ">
+    <div className="flex flex-1 h-full w-full p-6 dark:bg-black">
         <div className="flex flex-1 flex-col justify-center items-center gap-6">
             <div className="bg-primary/10 rounded-full py-1 px-4 w-fit">
                     <p className="text-primary font-semibold">Introducing Samaya Sync 1.0</p>

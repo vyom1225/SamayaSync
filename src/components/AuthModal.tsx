@@ -23,7 +23,7 @@ function AuthModal() {
             <DialogHeader>
                 <DialogTitle className="flex justify-center mb-2" asChild>
                     <Link href="/" className="flex items-center gap-1">
-                        <Image src="/logo.png" alt="logo of Samaya " width={40} height = {40}/>
+                        {/* <Image src="/logo.png" alt="logo of Samaya " width={40} height = {40}/> */}
                         <div className="text-primary text-bold text-2xl">Samaya Sync</div>
                     </Link>
                 </DialogTitle>

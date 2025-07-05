@@ -52,7 +52,7 @@ async function layout({children} :Readonly<{
     <div className="flex">
          <SideBar/>
          <div className="flex flex-col w-full min-h-screen">
-           <div className="flex justify-between md:justify-end  h-[74px] bg-primary/5 border-b-2 border-gray-200 p-4">
+           <div className="flex justify-between md:justify-end  h-[68px] bg-secondary border-b-2 border-gray-200 p-4">
             <div className="md:hidden ">
             <Sheet>
                 <SheetTrigger asChild>

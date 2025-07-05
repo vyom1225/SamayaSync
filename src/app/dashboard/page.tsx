@@ -79,11 +79,11 @@ async function DashboardPage() {
                             <div className="flex items-center gap-4 p-4">
                                 <UsersRound />
                                 <div className="flex flex-col">
-                                    <p className="text-gray-500 text-sm">{item.duration} Minutes Meeting</p>
+                                    <p className="text-muted-foreground text-sm">{item.duration} Minutes Meeting</p>
                                     <p className="text-semibold text-lg">{item.title}</p>
                                 </div>
                             </div>
-                            <div className="bg-primary-foreground p-4 flex justify-between items-center">
+                            <div className="bg-secondary p-4 flex justify-between items-center rounded-b-sm">
                                 <EventSwitch initialChecked = {item.active} 
                                              eventTypeId = {item.id}
                                 />

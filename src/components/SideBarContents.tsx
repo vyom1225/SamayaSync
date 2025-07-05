@@ -43,8 +43,8 @@ function SideBarContents() {
   return (
     <div className="text-lg px-4 text-gray-700 py-2">
       {SideBarList.map((content: SideBarContent) => (
-        <Link href = {content.src} key={content.index} className={` ${pathname === content.src ? "bg-purple-200 hover:bg-purple-200" : ""} p-2 mb-1 rounded-sm hover:bg-purple-100 flex items-center gap-2`}>
-          <content.logo  strokeWidth={1}/>
+        <Link href = {content.src} key={content.index} className={` ${pathname === content.src ? "text-primary bg-primary/10": ""} p-2 mb-1 rounded-sm text-muted-foreground hover:text-primary flex items-center gap-2`}>
+          <content.logo  strokeWidth={1} className="text-primary"/>
           <div>{content.title}</div>
         </Link>
       ))}

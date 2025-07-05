@@ -1,8 +1,11 @@
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import { ThemeProvider } from "@/components/ThemeProvider";
 import "./globals.css";
 import { Toaster } from "sonner";
+import { ourFileRouter } from "./api/uploadthing/core";
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -35,8 +38,11 @@ export default function RootLayout({
             enableSystem
             disableTransitionOnChange
           >
+             <NextSSRPlugin
+                routerConfig={extractRouterConfig(ourFileRouter)}
+             />
              {children}
-             <Toaster/>
+             <Toaster richColors closeButton/>
           </ThemeProvider>
 
       </body>

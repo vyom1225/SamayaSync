@@ -1,13 +1,16 @@
 "use client"
 import { useActionState, useState } from "react"
 import { Button } from "./ui/button"
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "./ui/card"
+import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "./ui/card"
 import { Input } from "./ui/input"
 import { Label } from "./ui/label"
 import { settingsAction } from "@/app/actions"
 import { useForm } from "@conform-to/react"
 import { parseWithZod } from "@conform-to/zod"
 import { settingSchema } from "@/lib/zodSchema"
+import { UploadDropzone } from "@/lib/uploadthing"
+import { toast } from "sonner"
+import { X } from "lucide-react"
 
 interface SettingFormProps{
     fullName : string,
@@ -57,20 +60,52 @@ function SettingsForm({fullName , email , image} : SettingFormProps) {
                         disabled
                     />
                 </div>
-                <div>
-                    <Label>Profile Image</Label>
-                    {
-                        currentProfileImage ? (
-                            <img src = {currentProfileImage} alt = "Profile Image" />
-                        ) : (
-                            "No Image"
-                        )
-                    }
+                <div className="flex flex-col gap-2">
+                    <input type = "hidden"
+                           name = {fields.profileImage.name}
+                           key = {fields.profileImage.key}
+                           value = {currentProfileImage}
+                    />
+                    <Label>Profile Image</Label>       
+                    <div>
+                        {
+                            currentProfileImage ? (
+                                <div className="size-16 relative mt-4 ">
+                                    <img src = {currentProfileImage} alt = "Profile Image" className="size-16" />
+                                    <Button variant="destructive" 
+                                            className="rounded-full  w-full size-4 absolute top-0 right-0 transform translate-x-1/2 -translate-y-1/2 flex justify-center items-center"
+                                            onClick={() => (
+                                                setCurrentProfileImage("")
+                                            )}
+                                            type = "button"
+                                    >
+                                        <X className="size-4"/>
+                                    </Button>
+                                </div>
+                               
+                        ) : (  
+                                <UploadDropzone endpoint="imageUploader" 
+                                   
+                                    onClientUploadComplete={(res) => {
+                                        console.log(res)
+                                        //setCurrentProfileImage(res[0])
+                                        toast.success("Profile Image is uploaded Successfully")
+                                    }}
+                                    onUploadError={(error) => {
+                                        console.log("Something went wrong", error)
+                                        toast.error(error.message)
+                                    }}
+                                    className="max-h-[160px] w-full"/>
+                        )}
+                    </div>  
+                    <p className="text-red-500 text-sm">{fields.profileImage.errors}</p> 
                 </div>
-                <Button>
+            </CardContent>
+            <CardFooter>
+                <Button className="mt-4">
                     Save Changes
                 </Button>
-            </CardContent>
+            </CardFooter>
         </form>
      </Card>
   )
