@@ -4,6 +4,8 @@ import { useFormStatus } from "react-dom"
 import { Button } from "./ui/button";
 import Image from "next/image";
 import { Loader2 } from "lucide-react";
+import { FcGoogle } from "react-icons/fc";
+import { ImGithub } from "react-icons/im";
 
 interface submitBtnProps {
     variant? : "link" | "default" | "destructive" | "outline" | "secondary" | "ghost" | null | undefined ,
@@ -40,7 +42,7 @@ export function GoogleAuthButton(){
                     </Button>
                 ) : (
                     <Button className="w-full " variant="outline">
-                        <Image src = "/GoogleLogo.png" alt = "Google Logo" width = {40} height = {40} className="mr-2"/>
+                        <FcGoogle className="mr-2 size-5"/>
                         Sign in With Google
                     </Button>
                 )
@@ -63,7 +65,7 @@ export function GitHubAuthButton(){
                     </Button>
                 ) : (
                     <Button className="w-full" variant="outline">
-                        <Image src = "/GitHubLogo.png" alt = "Google Logo" width = {40} height = {40} className="mr-2"/>
+                        <ImGithub className="mr-2 size-5"/>
                         Sign in With GitHub
                     </Button>
                 )
