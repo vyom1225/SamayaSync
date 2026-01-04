@@ -8,7 +8,7 @@ import { settingsAction } from "@/app/actions"
 import { useForm } from "@conform-to/react"
 import { parseWithZod } from "@conform-to/zod"
 import { settingSchema } from "@/lib/zodSchema"
-import { UploadDropzone } from "@/lib/uploadthing"
+import { UploadButton } from "@/lib/uploadthing"
 import { toast } from "sonner"
 import { X } from "lucide-react"
 
@@ -84,7 +84,7 @@ function SettingsForm({fullName , email , image} : SettingFormProps) {
                                 </div>
                                
                         ) : (  
-                                <UploadDropzone endpoint="imageUploader" 
+                                <UploadButton endpoint="imageUploader" 
                                    
                                     onClientUploadComplete={(res) => {
                                         console.log(res)
@@ -95,7 +95,8 @@ function SettingsForm({fullName , email , image} : SettingFormProps) {
                                         console.log("Something went wrong", error)
                                         toast.error(error.message)
                                     }}
-                                    className="max-h-[160px] w-full"/>
+                                    className="max-h-[160px] w-full"
+                                />
                         )}
                     </div>  
                     <p className="text-red-500 text-sm">{fields.profileImage.errors}</p> 
